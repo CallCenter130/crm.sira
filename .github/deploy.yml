@@ -1,44 +1,35 @@
 # ARCHIVO: .github/workflows/deploy.yml
-# Este workflow automatiza la construcción y el despliegue de la aplicación React a GitHub Pages.
-
 name: Build and Deploy React App to GitHub Pages
 
 on:
   push:
     branches:
-      - main # Se dispara cada vez que sube cambios a la rama 'main'
+      - main
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Se ejecuta en una máquina virtual de Linux proporcionada por GitHub
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Descarga el código del repositorio a la máquina virtual
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      # 2. Configura Node.js, la plataforma sobre la que corre React/Vite
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Usamos una versión moderna y estable de Node.js
-          cache: 'npm' # Habilita el caché para acelerar futuras instalaciones de dependencias
+          node-version: '20'
+          cache: 'npm'
 
-      # 3. Instala todas las dependencias del proyecto
       - name: Install Dependencies 📦
         run: npm install
 
-      # 4. Construye la aplicación para producción.
-      #    Aquí es donde Vite compila y optimiza su código.
-      #    ¡Y aquí ocurre la magia! Inyectamos el secreto como una variable de entorno.
       - name: Build for Production 🛠️
         run: npm run build
         env:
           VITE_GAS_API_URL: ${{ secrets.VITE_GAS_API_URL }}
 
-      # 5. Despliega los archivos construidos (de la carpeta 'dist') a la rama 'gh-pages'
       - name: Deploy to gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages # La rama de destino para el despliegue
-          folder: dist    # La carpeta que contiene los archivos finales de la aplicación
+          branch: gh-pages
+          folder: dist
