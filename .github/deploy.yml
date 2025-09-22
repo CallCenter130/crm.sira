@@ -1,19 +1,17 @@
-# ARCHIVO: .github/workflows/deploy.yml (Versión para "Source: GitHub Actions")
+# ARCHIVO: .github/workflows/deploy.yml (VERSIÓN DE DEPURACIÓN FINAL)
 
-name: Build and Deploy to GitHub Pages
+name: Build and Deploy React App (Custom Workflow)
 
 on:
   push:
-    branches: ["main"] # Se ejecuta en pushes a la rama main
-  workflow_dispatch: # Permite ejecutarlo manualmente desde la pestaña Actions
+    branches: ["main"]
+  workflow_dispatch:
 
-# Permisos para que el job pueda desplegar a GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Permite un solo despliegue concurrente, cancelando los anteriores
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -42,13 +40,17 @@ jobs:
         env:
           VITE_GAS_API_URL: ${{ secrets.VITE_GAS_API_URL }}
           
-      - name: Setup Pages 
+      # --- PASO DE DEPURACIÓN AÑADIDO ---
+      - name: List files in dist directory 🕵️
+        run: ls -R dist
+
+      - name: Setup Pages
         uses: actions/configure-pages@v4
         
-      - name: Upload artifact 
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Sube el contenido de la carpeta: 'dist'
+          path: './dist'
           
       - name: Deploy to GitHub Pages 🚀
         id: deployment
