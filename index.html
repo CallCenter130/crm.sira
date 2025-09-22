@@ -1,13 +1,57 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SIRA CRM</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba de Conexión Directa</title>
+    <style>
+        body { font-family: system-ui, sans-serif; display: grid; place-content: center; min-height: 100vh; text-align: center; }
+        #response { margin-top: 1em; padding: 1em; border-radius: 8px; border: 1px solid; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .info { background-color: #e2e3e5; border-color: #d6d8db; color: #383d41; }
+    </style>
+</head>
+<body>
+    <h1>Prueba de Conexión Directa a GAS</h1>
+    <button id="pingButton">Contactar Servidor GAS</button>
+    <pre id="response" class="info">Esperando acción...</pre>
+
+    <script>
+        // --- ¡EL ÚNICO PUNTO DE CONFIGURACIÓN! ---
+        // PEGUE AQUÍ SU URL DE LA APLICACIÓN WEB DE GAS
+        const GAS_API_URL = "URL_DE_SU_APLICACION_WEB_AQUI";
+
+        const pingButton = document.getElementById('pingButton');
+        const responseDiv = document.getElementById('response');
+
+        pingButton.addEventListener('click', async () => {
+            responseDiv.className = 'info';
+            responseDiv.textContent = 'Enviando solicitud...';
+            pingButton.disabled = true;
+
+            try {
+                const response = await fetch(GAS_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'ping' }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    redirect: 'follow'
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    responseDiv.className = 'success';
+                    responseDiv.textContent = 'ÉXITO:\n' + JSON.stringify(result.data, null, 2);
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                responseDiv.className = 'error';
+                responseDiv.textContent = 'ERROR:\n' + error.message;
+            } finally {
+                pingButton.disabled = false;
+            }
+        });
+    </script>
+</body>
 </html>
