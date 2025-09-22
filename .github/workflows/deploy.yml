@@ -1,0 +1,30 @@
+# ARCHIVO: .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Se ejecuta cada vez que sube cambios a la rama principal
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      # --- PASO DE PRUEBA INICIAL ---
+      # Este paso crea nuestro index.html de prueba y le inyecta el secreto
+      - name: Create Test HTML and Inject Secret 🧪
+        run: |
+          # Creamos el directorio de despliegue
+          mkdir -p dist
+          # Creamos el archivo HTML de prueba, reemplazando un marcador de posición
+          # con el secreto que guardamos en GitHub.
+          sed 's|URL_PLACEHOLDER|${{ secrets.VITE_GAS_API_URL }}|g' test-index.html > dist/index.html
+        
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # Despliega a una rama especial 'gh-pages'
+          folder: dist # La carpeta que contiene los archivos a desplegar
