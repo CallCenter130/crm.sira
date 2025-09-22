@@ -1,35 +1,55 @@
-# ARCHIVO: .github/workflows/deploy.yml
-name: Build and Deploy React App to GitHub Pages
+# ARCHIVO: .github/workflows/deploy.yml (Versión para "Source: GitHub Actions")
+
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"] # Se ejecuta en pushes a la rama main
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la pestaña Actions
+
+# Permisos para que el job pueda desplegar a GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite un solo despliegue concurrente, cancelando los anteriores
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
-
+      
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install Dependencies 📦
+          node-version: "20"
+          cache: "npm"
+      
+      - name: Install dependencies 📦
         run: npm install
-
-      - name: Build for Production 🛠️
+      
+      - name: Build application 🛠️
         run: npm run build
         env:
           VITE_GAS_API_URL: ${{ secrets.VITE_GAS_API_URL }}
-
-      - name: Deploy to gh-pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+          
+      - name: Setup Pages 
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact 
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages
-          folder: dist
+          path: './dist' # Sube el contenido de la carpeta 'dist'
+          
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4
