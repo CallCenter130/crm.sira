@@ -48,7 +48,7 @@ jobs:
       - name: Upload artifact 
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Sube el contenido de la carpeta 'dist'
+          path: './dist' # Sube el contenido de la carpeta: 'dist'
           
       - name: Deploy to GitHub Pages 🚀
         id: deployment
