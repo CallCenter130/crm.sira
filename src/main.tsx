@@ -1,19 +1,4 @@
 // ARCHIVO: src/main.tsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import { HashRouter } from 'react-router-dom' // <-- ¡VERIFICAR ESTA LÍNEA!
-import './index.css' // Asumiendo que existe un index.css
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <HashRouter> {/* <-- ¡VERIFICAR ESTA LÍNEA! */}
-      <App />
-    </HashRouter>
-  </React.StrictMode>,
-)
-
-/*/ ARCHIVO: src/main.tsx
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -31,15 +16,15 @@ const queryClient = new QueryClient(); // Creamos una instancia de QueryClient
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* --- ¡AQUÍ USAMOS HASHROUTER! --- 
+    {/* --- ¡AQUÍ USAMOS HASHROUTER! --- */}
     <HashRouter>
-      <QueryClientProvider client={queryClient}> {/* Envolvemos con el provider de React Query /}
+      <QueryClientProvider client={queryClient}> {/* Envolvemos con el provider de React Query */}
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <App />
         </ThemeProvider>
       </QueryClientProvider>
     </HashRouter>
-    {/* ------------------------------- *//*}
+    {/* ------------------------------- */}
   </React.StrictMode>
-);*/
+);
